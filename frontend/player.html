@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Station Player</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
+            crossorigin="anonymous"></script>
+        <script>
+        const station = new URL(window.location.href).searchParams.get("station");
+        const buttonsClicked = 15;
+        localStorage.playback = "no"
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax("http://u9k.de/sound/" + station).done(function (body) {
+                    const nr = parseInt(body);
+                    $("#number").text(nr);
+                    if (nr % buttonsClicked == 0 && localStorage.playback === "no") {
+                        localStorage.playback = "yes";
+                        $("#player")[0].play();
+                    } else if (nr % buttonsClicked == 1) {
+                        localStorage.playback = "no";
+                    }
+                });
+            }, 1000);
+        });
+        </script>
+    </head>
+    <body>
+        <div>
+            <audio id="player" controls>
+                <source src="audio.mp3">
+            </audio>
+            Button has been clicked <span id="number">0</span> times.
+        </div>
+    </body>
+</html>
